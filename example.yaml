@@ -1,24 +1,36 @@
+# Version 3.0
+substitutions:
+  # Unique device ID in HA
+  deviceid: "example_ac"
+  # Unique MHI device ID used for climate class
+  mhi_device_id: "mhi_${deviceid}"
+  # Unique device name in HA (sensor names will be prefixed by this name)
+  devicename: ${deviceid}
+  # If you encounter mhi_ac_ctrl_core.loop error: -2 errors, change the frame_size from 33 to 20
+  frame_size: "33"
+
 esphome:
   name: example-ac
   friendly_name: ${devicename}
   min_version: 2024.6.0
-  platformio_options:
+#  platformio_options:
     # Run CPU at 160Mhz to fix mhi_ac_ctrl_core.loop error: -2
-    board_build.f_cpu: 160000000L
+#    board_build.f_cpu: 160000000L
 
-esp8266:
-  board: d1_mini
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  flash_size: 8MB
 
 # Enable logging
 logger:
-  level: INFO
-  baud_rate: 0
-  # logs:
-  #   component: ERROR
+  level: DEBUG
+  logs:
+    component: ERROR
 
 ota:
-  password: <PLEASE SUPPLY PASSWORD>
   platform: esphome
+#  password: !secret ota_password
 
 wifi:
   ssid: !secret wifi_ssid
@@ -27,33 +39,84 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${devicename}
-    password: "iTM7a3slpwsL"
+    password: "configesp"
 
 captive_portal:
-    
-# Version 3.0
 
-substitutions:
-  # Unique device ID in HA
-  deviceid: "example_ac"
-  # Unique MHI device ID used for climate class
-  mhi_device_id: "mhi_${deviceid}"
-  # Unique device name in HA (sensor names will be prefixed by this name)
-  devicename: ${deviceid}
-  # If you encounter mhi_ac_ctrl_core.loop error: -2 errors, change the frame_size to 20
-  frame_size: "33"
+improv_serial:
 
-# Optionally enables the ESP web server
-# web_server:
-#   port: 80
+#esp32_improv:
+#  authorizer: none
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
+
+bluetooth_proxy:
+  active: true
+
+## Optionally enables the ESP web server
+## remark: returns mhi_ac_ctrl_core.loop error: -2 errors
+#web_server:
+#  port: 80
+#  version: 2
+#  ota: false
+#  local: true
+
+#external_components:
+# - source:
+#     type: local
+#     path: components
+#   components: [ MhiAcCtrl ]
 
 external_components:
-  - source: github://ginkage/MHI-AC-Ctrl-ESPHome@master
+  - source: github://fonske/MHI-AC-Ctrl-ESPHome@atom
     components: [ MhiAcCtrl ]
 
 MhiAcCtrl:
   id: ${mhi_device_id}
   frame_size: ${frame_size}
+
+# Board specific entities
+# Output that blinks the LED
+output:
+  - platform: template
+    id: status_output
+    type: binary
+    write_action:
+    - if:
+        condition:
+          lambda: return (state);
+        then:
+          - light.turn_on:
+              id: led
+              brightness: 70%
+              red: 100%
+              green: 0%
+              blue: 0%
+        else:
+          - light.turn_off: led
+
+light:
+  # Enable status LED
+  - platform: status_led
+    output: status_output
+    name: "Status Led"
+    entity_category: diagnostic
+
+  #G35=RGB WS2812C-2020
+  - platform: esp32_rmt_led_strip
+    rgb_order: GRB
+    pin: 35
+    num_leds: 4
+    # RMT 0 channels will be occupied by IR
+    rmt_channel: 1
+    chipset: ws2812
+    id: led
+    name: "Led"
+    entity_category: diagnostic
 
 button:
   - platform: restart
@@ -62,6 +125,8 @@ button:
 
 api:
   reboot_timeout: 0s
+#  encryption:
+#    key: !secret api_encryption_key
   services:
     # Call the set_api_room_temperature service from HA to override the room temperature
     # If a new value has not been received after room_temp_api_timeout seconds, it will fall back to internal sensor
@@ -104,6 +169,22 @@ binary_sensor:
 
     binary_sensors:
       - name: Defrost
+
+  - platform: status
+    name: "Status"
+
+#G41=Button
+  - platform: gpio
+    name: Button
+    entity_category: diagnostic
+    pin:
+      number: GPIO41
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_off: 10ms
 
 sensor:
   - platform: template

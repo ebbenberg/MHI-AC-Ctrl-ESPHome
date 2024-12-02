@@ -1,0 +1,37 @@
+## Optional: DS18B20 for extra room sensor
+one_wire:
+  - platform: gpio
+    pin: GPIO5
+
+sensor:
+  ## optional: DS18B20 room sensor on PCB
+  - platform: dallas_temp
+    name: ${room_name} temperature
+    id: room_temperature
+    update_interval: 30s
+    device_class: temperature
+    state_class: measurement 
+
+## Override the room temperature from AC with external value from DS18B20 sensor
+select:
+  - id: update_temp_i2c
+    name: Temperature Control
+    platform: template
+    options:
+      - "Mhi"
+      - "External"
+    initial_option: "Mhi"
+    optimistic: true
+    restore_value: true
+    entity_category: config
+    update_interval: never
+
+interval:
+  - interval: 30s
+    then:
+      - if:
+          condition:
+            - lambda: 'return id(update_temp_i2c).state == "External";'
+          then:
+            - lambda: |-
+                return ((MhiAcCtrl*)id(${deviceid}))->set_room_temperature(id(room_temperature).state);

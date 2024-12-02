@@ -1,0 +1,400 @@
+# Version 3.1 ATOM S3
+substitutions:
+  # Unique device ID in HA
+  deviceid: "ac_example" #deviceid: "example_ac" 14 char. is maximum
+  # Unique MHI device ID used for climate class
+  mhi_device_id: "mhi_${deviceid}"
+  # Unique device name in HA (sensor names will be prefixed by this name)
+  devicename: "AC Example" #devicename: ${deviceid}
+  # If you encounter mhi_ac_ctrl_core.loop error: -2 errors, change the frame_size from 33 to 20
+  # Remark: with frame_size 20 3D Auto and vanes left/right dont work anymore
+  frame_size: "33"
+  # Unique "Room" name for external sensorname connected to the I2C grove connector or ds18b20 conn.
+  room_name: Room
+
+esphome:
+  name: ac-example #name: example-ac
+  friendly_name: ${devicename}
+  min_version: 2024.6.0
+
+# Enable logging
+logger:
+  level: DEBUG  ## or choose INFO for less logging messages
+  logs:
+    component: ERROR    ## to remove component MhiAcCtrl took long time - warnings
+    #mhi_ac_ctrl: ERROR  ## to remove mhi_ac_ctrl_core.loop error: -2 - warnings
+
+debug:
+  update_interval: 5s
+
+ota:
+  platform: esphome
+  #password: !secret ota_password
+
+## local source files 
+#external_components:
+# - source:
+#     type: local
+#     path: components
+#   components: [ MhiAcCtrl ]
+
+## local options
+#packages:
+#  atoms3_lite: !include confs/atoms3-lite.yml         ## required
+  #atoms3_wdispl: !include confs/atoms3-wdispl.yml
+  #enviv: !include confs/enviv-i2c.yml                ## grove connected external sensor i2c / SKU: U001-D
+  #envpro: !include confs/envpro-i2c.yml              ## grove connected external sensor i2c / SKU: U169
+  #kmeter_iso: !include confs/kmeter-iso-i2c.yml       ## grove connected external sensor i2c / SKU: U133-V11
+  #co2: !include confs/co2-i2c.yml                    ## grove connected external sensor i2c / SKU: U103 / U104
+  #onewire: !include confs/onewire.yml                ## ds18b20 connected to PCB on 3V3 / GND/ Sign
+  #debug: !include confs/debug.yml
+  #status_led: !include confs/status-led-rgb.yml
+#  wifi: !include confs/wifi.yml                       ## required
+  #bluetooth: !include confs/bluetooth-proxy.yml      ## don't combine with webserver
+  #webserver: !include confs/webserver.yml            ## webserver can cause mhi_ac_ctrl_core.loop error: -2
+                                                      ## don't combine with bluetooth
+
+## remote source files
+external_components:
+  - source: github://fonske/MHI-AC-Ctrl-ESPHome@atom
+    components: [ MhiAcCtrl ]
+
+## remote options
+packages:
+  remote_package:
+    url: https://github.com/fonske/MHI-AC-Ctrl-ESPHome/
+    ref: atom
+    refresh: always
+            confs/atoms3-lite.yml,
+            #confs/atoms3-wdispl.yml,     
+            #confs/enviv-i2c.yml,
+            #confs/envpro-i2c.yml
+            #confs/kmeter-iso-i2c.yml,
+            #confs/co2-i2c.yml,
+            #confs/onewire.yml,
+            #confs/debug.yml,
+            ## enable this to monitor WiFi status with ESP in-built LED
+            #confs/status-led-rgb.yml,
+            confs/wifi.yml,
+            #confs/bluetooth-proxy.yml,
+            #confs/webserver.yml
+           ]
+
+MhiAcCtrl:
+  id: ${mhi_device_id}
+  frame_size: ${frame_size}
+
+button:
+  - platform: restart
+    name: Restart
+    entity_category: diagnostic
+    icon: mdi:button-pointer
+
+api:
+  reboot_timeout: 0s
+  #encryption:
+    #key: !secret api_encryption_key
+  actions:
+    ## Call the set_api_room_temperature action from HA to override the room temperature
+    ## If a new value has not been received after room_temp_api_timeout seconds, it will fall back to internal sensor
+    - action: set_api_room_temperature
+      variables:
+        value: float
+      then:
+        - lambda: |-
+            return ((MhiAcCtrl*)id(${deviceid}))->set_room_temperature(value);
+    ## Call the set_vanes action from HA to set the vane position
+    ## Needed because the ESPHome Climate class does not support this natively
+    ## Possible values: 1-4: static positions, 5: swing, 0: unknown
+    - action: set_vanes
+      variables:
+        value: int
+      then:
+        - lambda: |-
+            return ((MhiAcCtrl*)id(${deviceid}))->set_vanes(value);
+
+globals:
+  - id: room_temp_api_timeout
+    type: int
+    restore_value: no
+    initial_value: "120"
+  - id: frame_size
+    type: byte
+    restore_value: no
+    initial_value: ${frame_size}
+
+climate:
+  - platform: MhiAcCtrl
+    mhi_ac_ctrl_id: ${mhi_device_id}
+    id: ${deviceid}
+    name: "${devicename}"
+    entity_category: config
+
+binary_sensor:
+  - platform: custom
+    lambda: |-
+      return ((MhiAcCtrl*)id(${deviceid}))->get_binary_sensors();
+
+    binary_sensors:
+      - name: Defrost
+
+  - platform: status
+    name: Status
+    entity_category: diagnostic
+
+sensor:
+  - platform: template
+    name: Frame Size
+    id: frame_size_sensor
+    lambda: |-
+      return ${frame_size};
+    entity_category: diagnostic
+    update_interval: never
+
+  - platform: custom
+    lambda: |-
+      return ((MhiAcCtrl*)id(${deviceid}))->get_sensors();
+
+    # Sensor names in HA, you can change these if you want
+    # Don't delete them or change their position in the list
+    sensors:
+      - name: Error code
+      - name: Outdoor temperature
+      - name: Return air temperature
+      - name: Outdoor unit fan speed
+      - name: Indoor unit fan speed
+      - name: Current power
+      - name: Compressor frequency
+      - name: Indoor unit total run time
+      - name: Compressor total run time
+      - name: Vanes
+        id: vanes_UD_received
+        on_value:
+          then:
+            - lambda: |-
+                float received_value = id(vanes_UD_received).state;
+                if (received_value == 1.0) {
+                  id(fan_control_ud).publish_state("Up");
+                } else if (received_value == 2.0) {
+                  id(fan_control_ud).publish_state("Up/Center");
+                } else if (received_value == 3.0) {
+                  id(fan_control_ud).publish_state("Center/Down");
+                } else if (received_value == 4.0) {
+                  id(fan_control_ud).publish_state("Down");
+                } else if (received_value == 5.0) {
+                  id(fan_control_ud).publish_state("Swing");
+                }
+
+      - name: Energy used
+      - name: Indoor (U-bend) HE temp 1
+      - name: Indoor (capillary) HE temp 2
+      - name: Indoor (suction header) HE temp 3
+      - name: Outdoor HE temp
+      - name: Outdoor unit exp. valve
+      - name: Outdoor unit discharge pipe
+      - name: Outdoor unit discharge pipe super heat
+      - name: Compressor protection code
+      - name: Vanes Left Right
+        id: vanes_LR_received
+        on_value:
+          then:
+            - lambda: |-
+                if (id(frame_size_sensor).state != 33) {
+                  return;
+                }
+                float received_value = id(vanes_LR_received).state;
+                if (received_value == 1.0) {
+                  id(fan_control_lr).publish_state("Left");
+                } else if (received_value == 2.0) {
+                  id(fan_control_lr).publish_state("Left/Center");
+                } else if (received_value == 3.0) {
+                  id(fan_control_lr).publish_state("Center");
+                } else if (received_value == 4.0) {
+                  id(fan_control_lr).publish_state("Center/Right");
+                } else if (received_value == 5.0) {
+                  id(fan_control_lr).publish_state("Right");
+                } else if (received_value == 6.0) {
+                  id(fan_control_lr).publish_state("Wide");
+                } else if (received_value == 7.0) {
+                  id(fan_control_lr).publish_state("Spot");
+                } else if (received_value == 8.0) {
+                  id(fan_control_lr).publish_state("Swing");
+                }
+      - name: 3D Auto
+        id: Dauto_received
+        on_value:
+          then:
+            - lambda: |-
+                if (id(frame_size_sensor).state != 33) {
+                  return;
+                }
+                bool received_value = id(Dauto_received).state;
+                if (received_value) {
+                  ESP_LOGD("main", "received 3DAuto from AC");
+                  id(fan_control_3Dauto).publish_state(true);
+                }
+                else {
+                  ESP_LOGD("main", "received 3DAuto off from AC");
+                  id(fan_control_3Dauto).publish_state(false);
+                }
+
+text_sensor:
+  - platform: custom
+    lambda: |-
+      return ((MhiAcCtrl*)id(${deviceid}))->get_text_sensors();
+    text_sensors:
+      - name: Compressor protection status
+
+select:
+  - platform: template
+    name: Fan Control Left Right
+    id: fan_control_lr
+    icon: mdi:arrow-left-right
+    entity_category: config
+    optimistic: true
+    options:
+      # - "3D Auto"
+      - "Left"
+      - "Left/Center"
+      - "Center"
+      - "Center/Right"
+      - "Right"
+      - "Wide"
+      - "Spot"
+      - "Swing"
+    on_value:
+      - lambda: |-
+          if (id(frame_size_sensor).state == 33) {
+            auto state = id(fan_control_lr).state.c_str();
+            ESP_LOGD("main", "Option of my select: %s", state);
+            uint8_t vanesLR = 0;  // Initialize the vanesLR variable
+            if (id(fan_control_lr).state == "3D Auto") {
+              id(fan_control_3Dauto).publish_state(true);
+            } else if (id(fan_control_lr).state == "Left") {
+              vanesLR = 1;
+            } else if (id(fan_control_lr).state == "Left/Center") {
+              vanesLR = 2;
+            } else if (id(fan_control_lr).state == "Center") {
+              vanesLR = 3;
+            } else if (id(fan_control_lr).state == "Center/Right") {
+              vanesLR = 4;
+            } else if (id(fan_control_lr).state == "Right") {
+              vanesLR = 5;
+            } else if (id(fan_control_lr).state == "Wide") {
+              vanesLR = 6;
+            } else if (id(fan_control_lr).state == "Spot") {
+              vanesLR = 7;
+            } else if (id(fan_control_lr).state == "Swing") {
+              vanesLR = 8;
+            }
+            if ((vanesLR > 0) & (vanesLR < 9) & (vanesLR != id(vanes_LR_received).state)){
+              ESP_LOGD("main", "setting vanesLR to: %i", vanesLR);
+              return ((MhiAcCtrl*)id(${deviceid}))->set_vanesLR(vanesLR);
+            }
+            else {
+              ESP_LOGD("main", "Not setting vanesLR: %i", vanesLR);
+            }
+          }
+
+  - platform: template
+    name: Fan Control Up Down
+    id: fan_control_ud
+    icon: mdi:arrow-up-down
+    entity_category: config
+    optimistic: true
+    options:
+      # - "3D Auto"
+      - "Up"
+      - "Up/Center"
+      - "Center/Down"
+      - "Down"
+      - "Swing"
+    on_value:
+      - lambda: |-
+          auto state = id(fan_control_ud).state.c_str();
+          ESP_LOGD("main", "Option of my select: %s", state);
+          uint8_t vanesUD = 0;  // Initialize the vanesUD variable
+          if (id(fan_control_ud).state == "3D Auto") {
+            id(fan_control_3Dauto).publish_state(true);
+          } else if (id(fan_control_ud).state == "Up") {
+            vanesUD = 1;
+          } else if (id(fan_control_ud).state == "Up/Center") {
+            vanesUD = 2;
+          } else if (id(fan_control_ud).state == "Center/Down") {
+            vanesUD = 3;
+          } else if (id(fan_control_ud).state == "Down") {
+            vanesUD = 4;
+          } else if (id(fan_control_ud).state == "Swing") {
+            vanesUD = 5;
+          }
+          if ((vanesUD > 0) & (vanesUD < 6) & (vanesUD != id(vanes_UD_received).state)){
+            ESP_LOGD("main", "setting vanesUD to: %i", vanesUD);
+            return ((MhiAcCtrl*)id(${deviceid}))->set_vanes(vanesUD);
+          }
+          else {
+            ESP_LOGD("main", "Not setting vanesUD: %i", vanesUD);
+          }
+
+#  - platform: template
+#    name: Fan Speed
+#    id: fan_level_select
+#    icon: mdi:fan
+#    entity_category: config
+#    optimistic: true
+#    options:
+#     - "auto"
+#     - "low"
+#     - "medium"
+#     - "high"
+#     - "quiet"
+#    on_value:
+#      - lambda: |-
+#          auto state = id(fan_level_select).state.c_str();
+#          ESP_LOGD("main", "Option of my select: %s", state);
+#          uint8_t fan_speed = 0;  // Initialize the fan speed variable
+#          if (id(fan_level_select).state == "quiet") {
+#            fan_speed = 0;
+#          } else if (id(fan_level_select).state == "low") {
+#            fan_speed = 1;
+#          } else if (id(fan_level_select).state == "medium") {
+#            fan_speed = 2;
+#          } else if (id(fan_level_select).state == "high") {
+#            fan_speed = 6;
+#          } else if (id(fan_level_select).state == "auto") {
+#            fan_speed = 7;
+#          }
+#          if ((fan_speed > 0) & (fan_speed < 8)){
+#            ESP_LOGD("main", "setting fan_mode to: %i", fan_speed);
+#            return ((MhiAcCtrl*)id(${deviceid}))->set_fan(fan_speed);
+#          }
+#          else {
+#            ESP_LOGD("main", "Not setting fan speed: %i", fan_speed);
+#          }
+
+switch:
+  - platform: template
+    name: 3D Auto
+    id: fan_control_3Dauto
+    icon: mdi:video-3d
+    optimistic: true
+    entity_category: config
+    turn_on_action:
+      - lambda: |-
+          if (id(frame_size_sensor).state == 33) {
+            if (id(Dauto_received).state != 1) {
+              ESP_LOGD("main", "Turn on 3DAuto");
+              return ((MhiAcCtrl*)id(${deviceid}))->set_3Dauto(1);
+            }
+          } else {
+            ESP_LOGD("main", "Frame size is not 33, cannot turn on 3DAuto");
+          }
+    turn_off_action:
+      - lambda: |-
+          if (id(frame_size_sensor).state == 33) {
+            if (id(Dauto_received).state != 0) {
+              ESP_LOGD("main", "Turn off 3DAuto");
+              return ((MhiAcCtrl*)id(${deviceid}))->set_3Dauto(0);
+            }
+          } else {
+            ESP_LOGD("main", "Frame size is not 33, cannot turn off 3DAuto");
+          }

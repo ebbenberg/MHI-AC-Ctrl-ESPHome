@@ -1,0 +1,71 @@
+## Optional: i2c port for extra room ENV IV sensor
+## https://shop.m5stack.com/products/env-iv-unit-with-temperature-humidity-air-pressure-sensor-sht40-bmp280
+i2c:
+  - id: bus_a
+    sda: GPIO2
+    scl: GPIO1
+
+sensor:
+  - platform: sht4x
+    temperature:
+      name: ${room_name} temperature
+      id: room_temperature
+      device_class: temperature
+      state_class: measurement 
+    humidity:
+      name: ${room_name} humidity
+      id: room_humidity
+      device_class: humidity
+      state_class: measurement 
+    i2c_id: bus_a #or choose bus_b
+    address: 0x44
+    update_interval: 30s
+
+  - platform: bmp280_i2c
+    pressure:
+      name: ${room_name} atm pressure
+      id: room_pressure
+      device_class: atmospheric_pressure
+      state_class: measurement 
+      oversampling: 16x
+    i2c_id: bus_a #or choose bus_b
+    address: 0x76
+    update_interval: 30s
+    iir_filter: 2x
+
+  - platform: template
+    id: room_dewpoint
+    name: ${room_name} dewpoint
+    device_class: temperature
+    state_class: measurement 
+    lambda: |-
+        return (243.5*(log(id(room_humidity).state/100)+((17.67*id(room_temperature).state)/
+        (243.5+id(room_temperature).state)))/(17.67-log(id(room_humidity).state/100)-
+        ((17.67*id(room_temperature).state)/(243.5+id(room_temperature).state))));
+    unit_of_measurement: °C
+    update_interval: 30s
+    icon: 'mdi:thermometer-water'
+
+## Override the room temperature from AC with external value from sensor connected to I2C grove port
+select:
+  - id: update_temp_i2c
+    name: Temperature Control
+    platform: template
+    options:
+      - "Mhi"
+      - "External"
+    initial_option: "Mhi"
+    optimistic: true
+    restore_value: true
+    entity_category: config
+    update_interval: never
+
+interval:
+  - interval: 30s
+    then:
+      - if:
+          condition:
+            - lambda: 'return id(update_temp_i2c).state == "External";'
+          then:
+            - lambda: |-
+                return ((MhiAcCtrl*)id(${deviceid}))->set_room_temperature(id(room_temperature).state);

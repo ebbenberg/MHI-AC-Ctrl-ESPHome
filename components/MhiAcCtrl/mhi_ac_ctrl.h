@@ -156,7 +156,7 @@ public:
             ESP_LOGD("mhi_ac_ctrl", "did not receive a room_temp_api value, using IU temperature sensor");
         }
 
-        int ret = mhi_ac_ctrl_core.loop(200);
+        int ret = mhi_ac_ctrl_core.loop(150);  //300 sweetspot on atom S3 but lower responsive
         if (ret < 0)
             ESP_LOGW("mhi_ac_ctrl", "mhi_ac_ctrl_core.loop error: %i", ret);
     }
@@ -676,7 +676,7 @@ protected:
         return traits;
     }
 
-    float minimum_temperature_ { 18.0f };
+    float minimum_temperature_ { 14.0f };
     float maximum_temperature_ { 30.0f };
     float temperature_step_ { 0.5f };
 

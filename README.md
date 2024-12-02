@@ -26,11 +26,12 @@ Has now 5 different fan modes but I'm not sure if the auto mode works proper, ke
 # Changelog:
 
 **v1.0 Atom branch** (2024-12) 
- - Breaking change: ATOM S3 lite version - need new PCB. Send request to alphonsuijtdehaag at gmail dot com
- - Addition of an extra external sensor possible through groove port connection on the atom S3. Examples: ENV IV, CO2, ENV PRO from M5stack.
+ - Breaking change: ATOM S3 lite version - need new PCB layout. Send a request to alphonsuijtdehaag at gmail dot com
+ - Addition of an extra external sensor possible through grove port connection on the atom S3. Examples: ENV IV, CO2, ENV PRO from M5stack.
  - If the external sensor has a temperature reading, it can be used for external measurement AC temperature instead of the standard MHI sensor. Choose control through dropdown menu in home assistant.
    Exception: CO2 sensor (SCD40/41), because temperature reading is not stable enough. 
- - Bluetooth proxy option. Status led option.
+ - DS18B20 connection still exist on pcb with 4K7 resistor already on the board. Code also adjusted to external measurement AC temperature option.
+ - Bluetooth proxy option. Status led option. Debug opyiom.
  - Webserver can cause some mhi_ac_ctrl_core.loop error: -2 errors. Advise not to use the webserver or block the errors in the logging. Example code added in main yaml.
 
 # Below are the changes from "main" branch that also exist in the Atom version.

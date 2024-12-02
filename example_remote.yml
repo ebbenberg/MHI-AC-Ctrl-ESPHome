@@ -58,6 +58,7 @@ ota:
 external_components:
   - source: github://fonske/MHI-AC-Ctrl-ESPHome@atom
     components: [ MhiAcCtrl ]
+    refresh: always
 
 ## remote options
 packages:
@@ -65,6 +66,7 @@ packages:
     url: https://github.com/fonske/MHI-AC-Ctrl-ESPHome/
     ref: atom
     refresh: always
+    files: [ 
             confs/atoms3-lite.yml,
             #confs/atoms3-wdispl.yml,     
             #confs/enviv-i2c.yml,

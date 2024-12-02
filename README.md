@@ -1,7 +1,7 @@
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ginkage)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ebbenberg)
 [![paypal RobertJansen1](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=TL3SFZ4P6ZDHN)
 
-# MHI-AC-Ctrl-ESPHome
+# MHI-AC-Ctrl-ESPHome - Atom S3 version
 This project is a simple integration of the amazing work [absalom-muc](https://github.com/absalom-muc) has done with his project [MHI-AC-Ctrl](https://github.com/absalom-muc/MHI-AC-Ctrl).\
 It's supposed to simplify the [Home Assistant](https://www.home-assistant.io/) setup, while giving you OTA and auto-discovery with virtually zero effort and no MQTT needed, powered by [ESPHome](https://esphome.io/).\
 MHI-AC-Ctrl-core.\* files were forked directly, with no modification, whereas your WiFi credentials should go into the \*.yaml file, and mhi_ac_ctrl.h is the core of the integration.\
@@ -25,14 +25,16 @@ Has now 5 different fan modes but I'm not sure if the auto mode works proper, ke
 
 # Changelog:
 
-**v1.0 atom branch** (2024-12) 
- - Breaking change: ATOM S3 lite version - need new PCB. Send request to alphonsuijtdehaag at gmail dot com
- - Addition of an extra external sensor possible through groove port connection on the atom S3. Examples: ENV IV, CO2, ENV PRO from M5stack.
+**v1.0 Atom branch** (2024-12) 
+ - Breaking change: ATOM S3 lite version - need new PCB layout. Send a request to alphonsuijtdehaag at gmail dot com
+ - Addition of an extra external sensor possible through grove port connection on the atom S3. Examples: ENV IV, CO2, ENV PRO from M5stack.
  - If the external sensor has a temperature reading, it can be used for external measurement AC temperature instead of the standard MHI sensor. Choose control through dropdown menu in home assistant.
    Exception: CO2 sensor (SCD40/41), because temperature reading is not stable enough. 
- - Bluetooth proxy option. Status led option.
- - Webserver can cause some mhi_ac_ctrl_core.loop error: -2 errors. Advise not to use the webserver or block the errors in the logging. Example code added in main yaml.
+ - DS18B20 connection still exist on pcb with 4K7 resistor already on the board. Code also adjusted to external measurement AC temperature option.
+ - Bluetooth proxy option. Status led option. Debug optiom.
+ - Webserver can cause some mhi_ac_ctrl_core.loop error: -2 errors. Advise not to use the webserver or block the errors in the logging. Example code logger, added in main ac_exampleyaml.
 
+# Below are the changes from "main" branch that also exist in the Atom version.
 **v3.0** (2024-08)
  - Breaking change: moved all files to component and allow for easy install, thanks to @XMaarten and https://github.com/hberntsen/mhi-ac-ctrl-esp32-c3
    - When you are upgrading from v2.1 or older, and experience compile errors, please see https://github.com/ginkage/MHI-AC-Ctrl-ESPHome/issues/100#issuecomment-2395388853 for manual cleanup steps
@@ -74,6 +76,7 @@ You can to change the frame_size in the yaml to 20 to disable newer functionalit
 when framsize is set to 20, 3D auto, and vane Left / Right doesn't work, vane Up / Down works limited.  
 All other features should work fine.  
 
+![Example](/photos/mhi-ac-ctrl-atom.png)
 
 # License
 This project is licensed under the MIT License - see the LICENSE file for details.\

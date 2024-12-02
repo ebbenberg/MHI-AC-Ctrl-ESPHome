@@ -76,6 +76,7 @@ You can to change the frame_size in the yaml to 20 to disable newer functionalit
 when framsize is set to 20, 3D auto, and vane Left / Right doesn't work, vane Up / Down works limited.  
 All other features should work fine.  
 
+![Example](/photos/mhi-ac-ctrl-atom.png)
 
 # License
 This project is licensed under the MIT License - see the LICENSE file for details.\

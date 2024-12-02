@@ -1,4 +1,4 @@
-# Version 3.1 ATOM S3
+# Version 1.0 ATOM S3
 substitutions:
   # Unique device ID in HA
   deviceid: "ac_example" #deviceid: "example_ac" 14 char. is maximum

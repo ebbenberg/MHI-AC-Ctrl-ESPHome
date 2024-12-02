@@ -25,6 +25,14 @@ Has now 5 different fan modes but I'm not sure if the auto mode works proper, ke
 
 # Changelog:
 
+**v1.0 atom branch** (2024-12) 
+ - Breaking change: ATOM S3 lite version - need new PCB. Send request to alphonsuijtdehaag at gmail dot com
+ - Addition of an extra external sensor possible through groove port connection on the atom S3. Examples: ENV IV, CO2, ENV PRO from M5stack.
+ - If the external sensor has a temperature reading, it can be used for external measurement AC temperature instead of the standard MHI sensor. Choose control through dropdown menu in home assistant.
+   Exception: CO2 sensor (SCD40/41), because temperature reading is not stable enough. 
+ - Bluetooth proxy option. Status led option.
+ - Webserver can cause some mhi_ac_ctrl_core.loop error: -2 errors. Advise not to use the webserver or block the errors in the logging. Example code added in main yaml.
+
 **v3.0** (2024-08)
  - Breaking change: moved all files to component and allow for easy install, thanks to @XMaarten and https://github.com/hberntsen/mhi-ac-ctrl-esp32-c3
    - When you are upgrading from v2.1 or older, and experience compile errors, please see https://github.com/ginkage/MHI-AC-Ctrl-ESPHome/issues/100#issuecomment-2395388853 for manual cleanup steps

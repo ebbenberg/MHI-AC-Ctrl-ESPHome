@@ -31,8 +31,8 @@ Has now 5 different fan modes but I'm not sure if the auto mode works proper, ke
  - If the external sensor has a temperature reading, it can be used for external measurement AC temperature instead of the standard MHI sensor. Choose control through dropdown menu in home assistant.
    Exception: CO2 sensor (SCD40/41), because temperature reading is not stable enough. 
  - DS18B20 connection still exist on pcb with 4K7 resistor already on the board. Code also adjusted to external measurement AC temperature option.
- - Bluetooth proxy option. Status led option. Debug opyiom.
- - Webserver can cause some mhi_ac_ctrl_core.loop error: -2 errors. Advise not to use the webserver or block the errors in the logging. Example code added in main yaml.
+ - Bluetooth proxy option. Status led option. Debug optiom.
+ - Webserver can cause some mhi_ac_ctrl_core.loop error: -2 errors. Advise not to use the webserver or block the errors in the logging. Example code logger, added in main ac_exampleyaml.
 
 # Below are the changes from "main" branch that also exist in the Atom version.
 **v3.0** (2024-08)

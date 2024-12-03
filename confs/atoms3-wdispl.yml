@@ -11,6 +11,10 @@ esphome:
     then:
       - component.update: frame_size_sensor
 
+time:
+  - platform: sntp
+    id: sntp_time
+    
 spi:
   clk_pin: 17
   mosi_pin: 21

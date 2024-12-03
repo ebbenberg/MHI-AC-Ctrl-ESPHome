@@ -49,7 +49,7 @@ packages:
   #onewire: !include confs/onewire.yml                ## ds18b20 connected to PCB on 3V3 / GND/ Sign
   #debug: !include confs/debug.yml
   #status_led: !include confs/status-led-rgb.yml
-  wifi: !include confs/wifi.yml                       ## required
+  wifi: !include confs/wifi-info.yml                
   #bluetooth: !include confs/bluetooth-proxy.yml      ## don't combine with webserver
   #webserver: !include confs/webserver.yml            ## webserver can cause mhi_ac_ctrl_core.loop error: -2
                                                       ## don't combine with bluetooth
@@ -79,6 +79,22 @@ packages:
 #            #confs/bluetooth-proxy.yml,
 #            #confs/webserver.yml
 #           ]
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${devicename}
+    password: "configesp"
+
+captive_portal:
+
+improv_serial:
+
+#esp32_improv:
+#  authorizer: none
 
 MhiAcCtrl:
   id: ${mhi_device_id}

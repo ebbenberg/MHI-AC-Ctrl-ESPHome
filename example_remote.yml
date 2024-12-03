@@ -77,10 +77,26 @@ packages:
             #confs/debug.yml,
             ## enable this to monitor WiFi status with ESP in-built LED
             #confs/status-led-rgb.yml,
-            confs/wifi.yml,
+            confs/wifi-info.yml,
             #confs/bluetooth-proxy.yml,
             #confs/webserver.yml
            ]
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${devicename}
+    password: "configesp"
+
+captive_portal:
+
+improv_serial:
+
+#esp32_improv:
+#  authorizer: none
 
 MhiAcCtrl:
   id: ${mhi_device_id}

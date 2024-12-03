@@ -24,9 +24,6 @@ logger:
     component: ERROR    ## to remove component MhiAcCtrl took long time - warnings
     #mhi_ac_ctrl: ERROR  ## to remove mhi_ac_ctrl_core.loop error: -2 - warnings
 
-debug:
-  update_interval: 5s
-
 ota:
   platform: esphome
   #password: !secret ota_password

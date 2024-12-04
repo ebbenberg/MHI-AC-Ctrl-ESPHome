@@ -7,6 +7,9 @@ text_sensor:
     reset_reason:
       name: "Reset Reason"
       entity_category: diagnostic
+    device:
+      name: "Device Info"
+      entity_category: diagnostic
 
 sensor:
   - platform: debug

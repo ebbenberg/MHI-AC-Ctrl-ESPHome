@@ -86,6 +86,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${devicename}
+    ap_timeout: 15s
     password: "configesp"
 
 captive_portal:
@@ -144,6 +145,7 @@ climate:
     id: ${deviceid}
     name: "${devicename}"
     entity_category: config
+    icon: mdi:thermostat
 
 binary_sensor:
   - platform: custom
@@ -155,12 +157,14 @@ binary_sensor:
 
   - platform: status
     name: Status
+    icon: mdi:state-machine
     entity_category: diagnostic
 
 sensor:
   - platform: template
     name: Frame Size
     id: frame_size_sensor
+    icon: mdi:arrow-expand-horizontal
     lambda: |-
       return ${frame_size};
     entity_category: diagnostic
@@ -182,7 +186,7 @@ sensor:
       - name: Compressor frequency
       - name: Indoor unit total run time
       - name: Compressor total run time
-      - name: Vanes
+      - name: Vanes Up Down
         id: vanes_UD_received
         on_value:
           then:

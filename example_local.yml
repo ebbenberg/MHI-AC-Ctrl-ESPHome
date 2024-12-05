@@ -76,7 +76,9 @@ packages:
 #            #confs/status-led-rgb.yml,
 #            confs/wifi.yml,
 #            #confs/bluetooth-proxy.yml,
-#            #confs/webserver.yml
+#            #confs/webserver.yml,
+#            confs/labels-en.yml,
+#            #confs/labels-nl.yml 
 #           ]
 
 wifi:

@@ -1,0 +1,43 @@
+substitutions:
+  restart: ESP Restart
+  defrost: Defrost
+  status: Status
+  framesize: Frame size
+  error_code: Error code
+  outdoor_temperature: Outdoor temperature
+  return_air_temperature: Return air temperature
+  outdoor_unit_fan_speed: Outdoor unit fan speed
+  indoor_unit_fan_speed: Indoor unit fan speed
+  current_power: Current power
+  compressor_frequency: Compressor frequency
+  indoor_unit_total_run_time: Indoor unit total run time
+  compressor_total_run_time: Compressor total run time
+  vanes_up_down: Vanes Up Down
+  up: Up
+  up_center: Up/Center
+  center_down: Center/Down
+  down: Down
+  swing: Swing
+  energy_used: Energy used
+  indoor_u_bend_he_temp_1: Indoor (U-bend) HE temp 1
+  indoor_capillary_he_temp_2: Indoor (capillary) HE temp 2
+  indoor_suction_header_he_temp_3: Indoor (suction header) HE temp 3
+  outdoor_he_temp: Outdoor HE temp
+  outdoor_unit_exp_valve: Outdoor unit exp. valve
+  outdoor_unit_discharge_pipe: Outdoor unit discharge pipe
+  outdoor_unit_discharge_pipe_super_heat: Outdoor unit discharge pipe super heat
+  compressor_protection_code: Compressor protection code
+  vanes_left_right: Vanes Left Right
+  left: Left
+  left_center: Left/Center
+  center: Center
+  center_right: Center/Right
+  right: Right
+  wide: Wide
+  spot: Spot
+  d_auto: 3D Auto
+  compressor_protection_status: Compressor protection status
+  fan_control_left_right: Fan Control Left Right
+  fan_control_up_down: Fan Control Up Down
+  operation: Operation
+  control: Control

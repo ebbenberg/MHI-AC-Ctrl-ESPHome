@@ -6,3 +6,13 @@ web_server:
   include_internal: true
   ota: false
   local: true
+  sorting_groups:
+    - id: Operation
+      name: "${operation}"
+      sorting_weight: -20
+    - id: Control
+      name: "${control}"
+      sorting_weight: -20
+    - id: Status
+      name: "${status}"
+      sorting_weight: -10

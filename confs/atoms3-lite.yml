@@ -23,6 +23,7 @@ light:
     name: Led
     id: led
     icon: mdi:lightbulb
+    entity_category: diagnostic
     internal: true
     rgb_order: GRB
     pin: 35
@@ -38,6 +39,7 @@ binary_sensor:
     name: Button LED
     id: g41button
     icon: mdi:button-pointer
+    entity_category: diagnostic
     pin:
       number: GPIO41
       inverted: true

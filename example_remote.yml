@@ -48,8 +48,10 @@ ota:
   #status_led: !include confs/status-led-rgb.yml
 #  wifi: !include confs/wifi.yml                       ## required
   #bluetooth: !include confs/bluetooth-proxy.yml      ## don't combine with webserver
-  #webserver: !include confs/webserver.yml            ## webserver can cause mhi_ac_ctrl_core.loop error: -2
+#  webserver: !include confs/webserver.yml             ## webserver can cause mhi_ac_ctrl_core.loop error: -2
                                                       ## don't combine with bluetooth
+#  labels: !include confs/labels-en.yml                ## English language labels
+  #labels: !include confs/labels-nl.yml                ## Dutch language labels 
 
 ## remote source files
 external_components:

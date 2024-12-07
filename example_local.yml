@@ -329,6 +329,9 @@ sensor:
     id: power
     icon: mdi:flash
     unit_of_measurement: W
+    device_class: power
+    state_class: measurement 
+    accuracy_decimals: 0
     lambda: return id(compressor_amperage).state * 230;
     web_server:
       sorting_group_id: Operation

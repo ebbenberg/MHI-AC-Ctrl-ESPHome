@@ -87,28 +87,28 @@ text_sensor:
       auto iaq_ = int(id(iaq).state);
       if (iaq_ < 0) {
         // No IAQ sensor.
-        return {"unknown"};
+        return {"ext_unknown"};
       }
       if (iaq_ <= 50) {
-        return {"excellent"};
+        return {"ext_excellent"};
       }
       else if (iaq_ <= 100) {
-        return {"good"};
+        return {"ext_good"};
       }
       else if (iaq_ <= 150) {
-        return {"lightly polluted"};
+        return {"ext_lightly_polluted"};
       }
       else if (iaq_ <= 200) {
-        return {"moderately polluted"};
+        return {"ext_moderately_polluted"};
       }
       else if (iaq_ <= 250) {
-        return {"heavily polluted"};
+        return {"ext_heavily_polluted"};
       }
       else if (iaq_ <= 350) {
-        return {"severely polluted"};
+        return {"ext_severely_polluted"};
       }
       else if (iaq_ <= 500) {
-        return {"extremely polluted"};
+        return {"ext_extremely_polluted"};
       }
       else {
         // ESP_LOGD("iaq-classification", "IAQ not yet established: %s", id(static_iaq).state);
@@ -124,28 +124,28 @@ text_sensor:
       auto iaq_ = int(id(static_iaq).state);
       if (iaq_ < 0) {
         // No IAQ sensor.
-        return {"unknown"};
+        return {"${ext_unknown}"};
       }
       if (iaq_ <= 50) {
-        return {"excellent"};
+        return {"${ext_excellent}"};
       }
       else if (iaq_ <= 100) {
-        return {"good"};
+        return {"${ext_good}"};
       }
       else if (iaq_ <= 150) {
-        return {"lightly polluted"};
+        return {"${ext_lightly_polluted}"};
       }
       else if (iaq_ <= 200) {
-        return {"moderately polluted"};
+        return {"${ext_moderately_polluted}"};
       }
       else if (iaq_ <= 250) {
-        return {"heavily polluted"};
+        return {"${ext_heavily_polluted}"};
       }
       else if (iaq_ <= 350) {
-        return {"severely polluted"};
+        return {"${ext_severely_polluted}"};
       }
       else if (iaq_ <= 500) {
-        return {"extremely polluted"};
+        return {"${ext_extremely_polluted}"};
       }
       else {
         // ESP_LOGD("iaq-classification", "IAQ not yet established: %s", id(static_iaq).state);
@@ -176,7 +176,7 @@ interval:
     then:
       - if:
           condition:
-            - lambda: 'return id(update_temp_i2c).state == "${ext_mhi}";'
+            - lambda: 'return id(update_temp_i2c).state == "${ext_external}";'
           then:
             - lambda: |-
                 return ((MhiAcCtrl*)id(${deviceid}))->set_room_temperature(id(room_temperature).state);

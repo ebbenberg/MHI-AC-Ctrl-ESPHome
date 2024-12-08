@@ -9,20 +9,20 @@ i2c:
 sensor:
   - platform: scd4x
     co2:
-      name: ${room_name} CO2
+      name: ${room_name} ${ext_co2}
       id: room_co2
       device_class: carbon_dioxide
       state_class: measurement 
       on_value:
         - component.update: co2_classification
     humidity:
-      name: ${room_name} humidity
+      name: ${room_name} ${ext_humidity}
       id: room_rh
       device_class: humidity
       state_class: measurement 
       accuracy_decimals: 1
     temperature:
-      name: ${room_name} temperature
+      name: ${room_name} ${ext_temperature}
       id: room_temp
       device_class: temperature
       state_class: measurement 
@@ -35,7 +35,7 @@ sensor:
     automatic_self_calibration: False
 
   - platform: template
-    name: ${room_name} VPD
+    name: ${room_name} ${ext_vpd}
     icon: mdi:gauge
     id: gr2_ace_vpd
     lambda: |-
@@ -48,32 +48,32 @@ sensor:
 
 text_sensor:
   - platform: template
-    name: ${room_name} Co2 classification
+    name: ${room_name} ${ext_co2_classification}
     id: co2_classification
     icon: "mdi:checkbox-marked-circle-outline"
     lambda: |-
       auto co2_ = int(id(room_co2).state);
       if (co2_ < 0) {
         // No CO2 sensor.
-        return {"unknown"};
+        return {"${ext_unknown}"};
       }
       if (co2_ <= 800) {
-        return {"excellent"};
+        return {"${ext_excellent}"};
       }
       else if (co2_ <= 1200) {
-        return {"good"};
+        return {"${ext_good}"};
       }
       else if (co2_ <= 1500) {
-        return {"lightly high"};
+        return {"${ext_slightly_high}"};
       }
       else if (co2_ <= 1800) {
-        return {"moderately high"};
+        return {"${ext_moderately_high}"};
       }
       else if (co2_ <= 2500) {
-        return {"very high"};
+        return {"${ext_very_high}"};
       }
       else if (co2_ <= 4000) {
-        return {"get out!"};
+        return {"${ext_get_out}"};
       }
       else {
         // ESP_LOGD("co2-classification", "CO2 not yet established: %s", id(static_co2).state);
@@ -100,7 +100,7 @@ switch:
 
 button:
   - platform: template
-    name: "CO2 manual calibration (only in fresh air for at least 20min)"
+    name: "${ext_co2_manual_calibration} (only in fresh air for at least 20min)"
     id: push_button
     entity_category: config
     on_press:

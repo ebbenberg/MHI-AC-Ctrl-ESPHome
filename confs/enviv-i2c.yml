@@ -8,12 +8,12 @@ i2c:
 sensor:
   - platform: sht4x
     temperature:
-      name: ${room_name} temperature
+      name: ${room_name} ${ext_temperature}
       id: room_temperature
       device_class: temperature
       state_class: measurement 
     humidity:
-      name: ${room_name} humidity
+      name: ${room_name} ${ext_humidity}
       id: room_humidity
       device_class: humidity
       state_class: measurement 
@@ -23,7 +23,7 @@ sensor:
 
   - platform: bmp280_i2c
     pressure:
-      name: ${room_name} atm pressure
+      name: ${room_name} ${ext_atm_pressure}
       id: room_pressure
       device_class: atmospheric_pressure
       state_class: measurement 
@@ -35,7 +35,7 @@ sensor:
 
   - platform: template
     id: room_dewpoint
-    name: ${room_name} dewpoint
+    name: ${room_name} ${ext_dewpoint}
     device_class: temperature
     state_class: measurement 
     lambda: |-
@@ -49,12 +49,12 @@ sensor:
 ## Override the room temperature from AC with external value from sensor connected to I2C grove port
 select:
   - id: update_temp_i2c
-    name: Temperature Control
+    name: ${ext_temperature_control}
     platform: template
     options:
-      - "Mhi"
-      - "External"
-    initial_option: "Mhi"
+      - "${ext_mhi}"
+      - "#{ext_external"
+    initial_option: "${ext_mhi}"
     optimistic: true
     restore_value: true
     entity_category: config
@@ -65,7 +65,7 @@ interval:
     then:
       - if:
           condition:
-            - lambda: 'return id(update_temp_i2c).state == "External";'
+            - lambda: 'return id(update_temp_i2c).state == "${ext_external}";'
           then:
             - lambda: |-
                 return ((MhiAcCtrl*)id(${deviceid}))->set_room_temperature(id(room_temperature).state);

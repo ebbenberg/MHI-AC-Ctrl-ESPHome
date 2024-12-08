@@ -1,0 +1,100 @@
+## NOT FINISHED/TESTED
+## used Atom is a S3R oled version: See: https://docs.m5stack.com/en/core/AtomS3R
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  flash_size: 8MB
+
+esphome:
+  on_boot:
+    priority: 200
+    then:
+      - component.update: frame_size_sensor
+  platformio_options:
+    # Run CPU at 160Mhz to fix mhi_ac_ctrl_core.loop error: -2
+    board_build.f_cpu: 240000000L
+    
+time:
+  - platform: sntp
+    id: sntp_time
+    
+spi:
+  clk_pin: 17
+  mosi_pin: 21
+
+# Display configuration
+display:
+  - platform: st7789v  #  GC9107
+    id: display_tft
+    model: Custom
+    height: 128
+    width: 128
+    rotation: 180
+    offset_height: 2
+    offset_width: 1
+    backlight_pin: 16
+    cs_pin: 15
+    dc_pin: 33
+    reset_pin: 34
+    eightbitcolor: true
+    update_interval: 5s
+    lambda: |-
+      it.strftime(64, 3, id(font_20), TextAlign::TOP_CENTER, "%l:%M %p", id(sntp_time).now());
+      it.print(0, 30, id(font_20), "Temperature:");
+      // it.printf(32, 50, id(font_24), "%.1f °C", id(probe01).state);
+      it.print(0, 79, id(font_20), "TDS:");
+      // it.printf(0, 104, id(font_24), "%.1f PPM", id(tds).state);
+
+# Font configuration for display
+font:
+  - file: "gfonts://Roboto"
+    id: font_24
+    size: 24
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz/³µ'
+
+  - file: "gfonts://Roboto"
+    id: font_20
+    size: 20
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz/³µ'
+
+color:
+  - id: RED
+    red: 100%
+    green: 0%
+    blue: 0%
+  - id: BLUE
+    red: 0%
+    green: 0%
+    blue: 100%
+  - id: WHITE
+    red: 100%
+    green: 100%
+    blue: 100%
+  - id: GREEN
+    red: 0%
+    green: 100%
+    blue: 0%
+  - id: YELLOW
+    red: 100%
+    green: 100%
+    blue: 0%
+
+
+sensor:
+  - platform: bmi160  # BMI270
+    address: 0x68
+    update_interval: 60s
+    acceleration_x:
+      name: "BMI160 Accel X"
+    acceleration_y:
+      name: "BMI160 Accel Y"
+    acceleration_z:
+      name: "BMI160 Accel z"
+    gyroscope_x:
+      name: "BMI160 Gyro X"
+    gyroscope_y:
+      name: "BMI160 Gyro Y"
+    gyroscope_z:
+      name: "BMI160 Gyro z"
+    temperature:
+      name: "BMI160 Temperature"

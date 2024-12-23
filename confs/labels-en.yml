@@ -8,7 +8,7 @@ substitutions:
   return_air_temperature: Return air temperature
   outdoor_unit_fan_speed: Outdoor unit fan speed
   indoor_unit_fan_speed: Indoor unit fan speed
-  compressor_amperage: Compressor amperage
+  compressor_current: Compressor current
   compressor_power: Compressor power
   compressor_frequency: Compressor frequency
   indoor_unit_total_run_time: Indoor unit total run time

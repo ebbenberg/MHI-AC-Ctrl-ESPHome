@@ -226,8 +226,8 @@ sensor:
         web_server:
           sorting_group_id: Status
           sorting_weight: 1
-      - name: ${compressor_amperage}
-        id: compressor_amperage
+      - name: ${compressor_current}
+        id: compressor_current
         web_server:
           sorting_group_id: Operation
           sorting_weight: 9
@@ -350,7 +350,7 @@ sensor:
     device_class: power
     state_class: measurement 
     accuracy_decimals: 0
-    lambda: return id(compressor_amperage).state * 230;
+    lambda: return id(compressor_current).state * 230;
     web_server:
       sorting_group_id: Operation
       sorting_weight: 10

@@ -8,7 +8,7 @@ substitutions:
   return_air_temperature: Binnenunit retour temperatuur
   outdoor_unit_fan_speed: Buitenunit fansnelheid
   indoor_unit_fan_speed: Binnenunit fansnelheid
-  compressor_amperage: Compressor stroom
+  compressor_current: Compressor stroom
   compressor_power: Compressor vermogen
   compressor_frequency: Compressor frequentie
   indoor_unit_total_run_time: Binnenunit draaiuren

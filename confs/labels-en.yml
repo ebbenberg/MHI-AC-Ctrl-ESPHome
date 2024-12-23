@@ -37,6 +37,12 @@ substitutions:
   wide: Wide
   spot: Spot
   d_auto: 3D Auto
+  fan_speed: Fan speed
+  quiet: Quiet
+  low: Low
+  medium: Medium
+  high: High
+  auto: Auto
   compressor_protection_status: Compressor protection status
   vanes_control_left_right: Vanes Control Left Right
   vanes_control_up_down: Vanes Control Up Down
@@ -73,3 +79,7 @@ substitutions:
   ext_moderately_high: moderately high
   ext_very_high: very high
   ext_get_out: get out
+  led: LED
+  button_led: Button LED
+  led_brightness: LED brightness
+  switch_led: LED Switch

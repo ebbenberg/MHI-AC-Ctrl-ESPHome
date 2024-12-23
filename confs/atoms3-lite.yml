@@ -20,7 +20,7 @@ esphome:
 light:
 #G35=RGB WS2812C-2020
   - platform: esp32_rmt_led_strip
-    name: Led
+    name: ${led}
     id: led
     icon: mdi:lightbulb
     entity_category: diagnostic
@@ -36,7 +36,7 @@ light:
 #G41=Button
 binary_sensor:
   - platform: gpio
-    name: Button LED
+    name: ${button_led}
     id: g41button
     icon: mdi:button-pointer
     entity_category: diagnostic
@@ -58,7 +58,7 @@ number:
     ## Set led brightness
   - platform: template
     id: led_brightness
-    name: Led Brightness
+    name: ${led_brightness}
     icon: mdi:toggle-switch-variant
     mode: slider
     entity_category: diagnostic
@@ -84,7 +84,7 @@ number:
 switch:
   - platform: template
     id: led_switch
-    name: Led switch
+    name: ${switch_led}
     icon: mdi:toggle-switch-outline
     entity_category: diagnostic
     optimistic: true

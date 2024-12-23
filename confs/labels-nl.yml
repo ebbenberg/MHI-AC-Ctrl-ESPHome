@@ -28,7 +28,7 @@ substitutions:
   outdoor_unit_discharge_pipe: Buitenunit afvoerleiding
   outdoor_unit_discharge_pipe_super_heat: Buitenunit afvoerleiding oververh.
   compressor_protection_code: Compressor beschermings code
-  vanes_left_right: Lamellen links rechts
+  vanes_left_right: Lamellen l/r
   left: Links
   left_center: Midden links
   center: Midden
@@ -37,9 +37,15 @@ substitutions:
   wide: Breed
   spot: Spot
   d_auto: 3D Auto
+  fan_speed: Fan
+  quiet: Stil
+  low: Laag
+  medium: Gemiddeld
+  high: Hoog
+  auto: Auto
   compressor_protection_status: Compressor beschermings status
-  vanes_control_left_right: Lamellen links rechts 
-  vanes_control_up_down: Lamellen op en neer
+  vanes_control_left_right: Lamellen l/r 
+  vanes_control_up_down: Lamellen b/o
   operation: Meetgegevens
   control: Bediening
   ext_temperature: temperatuur
@@ -73,3 +79,7 @@ substitutions:
   ext_moderately_high: redelijk hoog
   ext_very_high: zeer hoog
   ext_get_out: wegwezen
+  led: LED
+  button_led: Drukknop LED
+  led_brightness: LED helderheid
+  switch_led: LED Schakelaar

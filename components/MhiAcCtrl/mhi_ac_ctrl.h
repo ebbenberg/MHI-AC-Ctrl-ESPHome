@@ -549,6 +549,11 @@ public:
         ESP_LOGD("mhi_ac_ctrl", "set vanes Left Right: %i", value);
     }
 
+    void set_fan(int value) {
+        mhi_ac_ctrl_core.set_fan(value);
+        ESP_LOGD("mhi_ac_ctrl", "set fan: %i", value);
+    }
+
     void set_3Dauto(bool value) {
         // ESP_LOGD("mhi_ac_ctrl", "set 3D auto: %s", value);
         if (value){

@@ -210,21 +210,22 @@ sensor:
 #          sorting_weight: 2
       - name: ${indoor_unit_fan_speed}
         id: indoor_unit_fan_speed
-        on_value:
-          then:
-            - lambda: |-
-                float received_value = id(indoor_unit_fan_speed).state;
-                if (received_value == 2.0) {
-                  id(fan_speed).publish_state("${quiet}");
-                } else if (received_value == 3.0) {
-                  id(fan_speed).publish_state("${low}");
-                } else if (received_value == 4.0) {
-                  id(fan_speed).publish_state("${medium}");
-                } else if (received_value == 5.0) {
-                  id(fan_speed).publish_state("${high}");
-                } else if (received_value == 6.0) {
-                  id(fan_speed).publish_state("${auto}");
-                }
+#        on_value:
+#          then:
+#            - lambda: |-
+#                float received_value = id(indoor_unit_fan_speed).state;
+#                if (received_value == 3.0) {
+#                  id(fan_speed).publish_state("${quiet}");
+#                } else if (received_value == 4.0) {
+#                  id(fan_speed).publish_state("${low}");
+#                } else if (received_value == 6.0) {
+#                  id(fan_speed).publish_state("${medium}");
+#                } else if (received_value == 8.0) {
+#                  id(fan_speed).publish_state("${high}");
+#                }
+##                } else if (received_value == 6.0) {
+##                  id(fan_speed).publish_state("${auto}");
+##                }
 #        web_server:
 #          sorting_group_id: Status
 #          sorting_weight: 1
@@ -464,44 +465,44 @@ select:
 #      sorting_group_id: Control
 #      sorting_weight: 4
 
-#only exist in installer version with webserver, otherwise in climate sensor
-  - platform: template
-    id: fan_speed
-    name: ${fan_speed}
-    icon: mdi:fan
-    entity_category: config
-    optimistic: true
-    internal: false  
-    options:
-     - "${quiet}"
-     - "${low}"
-     - "${medium}"
-     - "${high}"
-     - "${auto}"
-#    initial_option: "${auto}"
-    on_value:
-      - lambda: |-
-          auto state = id(fan_speed).state.c_str();
-          ESP_LOGD("main", "Option of my select: %s", state);
-          uint8_t fan_ = 0;  // Initialize the vanesUD variable
-          if (id(fan_speed).state == "${quiet}") {
-            fan_ = 0;
-          } else if (id(fan_speed).state == "${low}") {
-            fan_ = 1;
-          } else if (id(fan_speed).state == "${medium}") {
-            fan_ = 2;
-          } else if (id(fan_speed).state == "${high}") {
-            fan_ = 6;
-          } else if (id(fan_speed).state == "${auto}") {
-            fan_ = 7;
-          }
-          if ((fan_ >= 0) & (fan_ < 8)){
-            ESP_LOGD("main", "setting fan_speed to: %i", fan_);
-            return ((MhiAcCtrl*)id(${deviceid}))->set_fan(fan_);
-          }
-          else {
-            ESP_LOGD("main", "Not setting fan_speed: %i", fan_);
-          }
+#only exist in installer version with webserver
+#  - platform: template
+#    id: fan_speed
+#    name: ${fan_speed}
+#    icon: mdi:fan
+#    entity_category: config
+#    optimistic: true
+#    internal: false  
+#    options:
+#     - "${quiet}"
+#     - "${low}"
+#     - "${medium}"
+#     - "${high}"
+#     - "${auto}"
+##    initial_option: "${auto}"
+#    on_value:
+#      - lambda: |-
+#          auto state = id(fan_speed).state.c_str();
+#          ESP_LOGD("main", "Option of my select: %s", state);
+#          uint8_t fan_ = 0;  // Initialize the vanesUD variable
+#          if (id(fan_speed).state == "${quiet}") {
+#            fan_ = 0;
+#          } else if (id(fan_speed).state == "${low}") {
+#            fan_ = 1;
+#          } else if (id(fan_speed).state == "${medium}") {
+#            fan_ = 2;
+#          } else if (id(fan_speed).state == "${high}") {
+#            fan_ = 6;
+#          } else if (id(fan_speed).state == "${auto}") {
+#            fan_ = 7;
+#          }
+#          if ((fan_ >= 0) & (fan_ < 8)){
+#            ESP_LOGD("main", "setting fan_speed to: %i", fan_);
+#            return ((MhiAcCtrl*)id(${deviceid}))->set_fan(fan_);
+#          }
+#          else {
+#            ESP_LOGD("main", "Not setting fan_speed: %i", fan_);
+#          }
 #    web_server:
 #      sorting_group_id: Control
 #      sorting_weight: 2

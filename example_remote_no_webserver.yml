@@ -90,12 +90,12 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${devicename}
-    ap_timeout: 15s
+    ap_timeout: 30s
     password: "configesp"
 
 captive_portal:
 
-#improv_serial:
+improv_serial:
 
 #esp32_improv:
 #  authorizer: none
@@ -209,23 +209,6 @@ sensor:
 #          sorting_group_id: Status
 #          sorting_weight: 2
       - name: ${indoor_unit_fan_speed}
-        id: indoor_unit_fan_speed
-#        on_value:
-#          then:
-#            - lambda: |-
-#                float received_value = id(indoor_unit_fan_speed).state;
-#                if (received_value == 3.0) {
-#                  id(fan_speed).publish_state("${quiet}");
-#                } else if (received_value == 4.0) {
-#                  id(fan_speed).publish_state("${low}");
-#                } else if (received_value == 6.0) {
-#                  id(fan_speed).publish_state("${medium}");
-#                } else if (received_value == 8.0) {
-#                  id(fan_speed).publish_state("${high}");
-#                }
-##                } else if (received_value == 6.0) {
-##                  id(fan_speed).publish_state("${auto}");
-##                }
 #        web_server:
 #          sorting_group_id: Status
 #          sorting_weight: 1
@@ -358,6 +341,31 @@ sensor:
 #      sorting_group_id: Operation
 #      sorting_weight: 10
 
+  - platform: template
+    id: fan_mode_value
+    entity_category: DIAGNOSTIC
+    internal: true
+    lambda: |-
+      auto new_value = id(${deviceid}).fan_mode.value();
+      if (id(fan_mode_value).state == new_value) {
+          return {};  // No state change needed
+      } else {
+          ESP_LOGD("main", "NEW value do something");
+          if (new_value == 9.0) {
+            id(fan_speed).publish_state("${quiet}");
+          } else if (new_value == 3.0) {
+            id(fan_speed).publish_state("${low}");
+          } else if (new_value == 4.0) {
+            id(fan_speed).publish_state("${medium}");
+          } else if (new_value == 5.0) {
+            id(fan_speed).publish_state("${high}");
+          } else if (new_value == 2.0) {
+            id(fan_speed).publish_state("${auto}");
+          }
+          return new_value;  // Update the state with the new value
+      }      
+    update_interval: 30s
+
 text_sensor:
   - platform: custom
     lambda: |-
@@ -465,44 +473,35 @@ select:
 #      sorting_group_id: Control
 #      sorting_weight: 4
 
-#only exist in installer version with webserver
-#  - platform: template
-#    id: fan_speed
-#    name: ${fan_speed}
-#    icon: mdi:fan
-#    entity_category: config
-#    optimistic: true
-#    internal: false  
-#    options:
-#     - "${quiet}"
-#     - "${low}"
-#     - "${medium}"
-#     - "${high}"
-#     - "${auto}"
-##    initial_option: "${auto}"
-#    on_value:
-#      - lambda: |-
-#          auto state = id(fan_speed).state.c_str();
-#          ESP_LOGD("main", "Option of my select: %s", state);
-#          uint8_t fan_ = 0;  // Initialize the vanesUD variable
-#          if (id(fan_speed).state == "${quiet}") {
-#            fan_ = 0;
-#          } else if (id(fan_speed).state == "${low}") {
-#            fan_ = 1;
-#          } else if (id(fan_speed).state == "${medium}") {
-#            fan_ = 2;
-#          } else if (id(fan_speed).state == "${high}") {
-#            fan_ = 6;
-#          } else if (id(fan_speed).state == "${auto}") {
-#            fan_ = 7;
-#          }
-#          if ((fan_ >= 0) & (fan_ < 8)){
-#            ESP_LOGD("main", "setting fan_speed to: %i", fan_);
-#            return ((MhiAcCtrl*)id(${deviceid}))->set_fan(fan_);
-#          }
-#          else {
-#            ESP_LOGD("main", "Not setting fan_speed: %i", fan_);
-#          }
+  - platform: template
+    id: fan_speed
+    name: ${fan_speed}
+    icon: mdi:fan
+    entity_category: config
+    optimistic: true
+    internal: false  
+    options:
+     - "${quiet}"
+     - "${low}"
+     - "${medium}"
+     - "${high}"
+     - "${auto}"
+    on_value:
+      then:
+        - climate.control:
+            id: ${deviceid}
+            fan_mode: !lambda |-
+                if (i == 0) {
+                  return CLIMATE_FAN_QUIET;
+                } else if (i == 1) {
+                  return CLIMATE_FAN_LOW;
+                } else if (i == 2) {
+                  return CLIMATE_FAN_MEDIUM;
+                } else if (i == 3) {
+                  return CLIMATE_FAN_HIGH;
+                } else {
+                  return CLIMATE_FAN_AUTO;
+                }
 #    web_server:
 #      sorting_group_id: Control
 #      sorting_weight: 2

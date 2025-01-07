@@ -23,7 +23,7 @@ sensor:
 
   - platform: bmp280_i2c
     pressure:
-      name: ${room_name} ${ext_atm_pressure}
+      name: ${ext_atm_pressure}
       id: room_pressure
       device_class: atmospheric_pressure
       state_class: measurement 

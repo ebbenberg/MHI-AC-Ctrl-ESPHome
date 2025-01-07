@@ -8,12 +8,12 @@ i2c:
 sensor:
   - platform: sht4x
     temperature:
-      name: ${room_name} ${ext_temperature}
+      name: ${ext_temperature}
       id: room_temperature
       device_class: temperature
       state_class: measurement 
     humidity:
-      name: ${room_name} ${ext_humidity}
+      name: ${ext_humidity}
       id: room_humidity
       device_class: humidity
       state_class: measurement 
@@ -35,7 +35,7 @@ sensor:
 
   - platform: template
     id: room_dewpoint
-    name: ${room_name} ${ext_dewpoint}
+    name: ${ext_dewpoint}
     device_class: temperature
     state_class: measurement 
     lambda: |-
@@ -53,7 +53,7 @@ select:
     platform: template
     options:
       - "${ext_mhi}"
-      - "#{ext_external"
+      - "${ext_external}"
     initial_option: "${ext_mhi}"
     optimistic: true
     restore_value: true

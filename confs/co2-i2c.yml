@@ -9,24 +9,27 @@ i2c:
 sensor:
   - platform: scd4x
     co2:
-      name: ${room_name} ${ext_co2}
+      name: ${ext_co2}
       id: room_co2
       device_class: carbon_dioxide
       state_class: measurement 
       on_value:
         - component.update: co2_classification
+      #icon: mdi:water-percent
     humidity:
-      name: ${room_name} ${ext_humidity}
+      name: ${ext_humidity}
       id: room_rh
       device_class: humidity
       state_class: measurement 
       accuracy_decimals: 1
+      icon: mdi:water-percent
     temperature:
-      name: ${room_name} ${ext_temperature}
+      name: ${ext_temperature}
       id: room_temp
       device_class: temperature
       state_class: measurement 
       accuracy_decimals: 2
+      icon: mdi:thermometer
 #    temperature_offset: "4.2°C"
 #    measurement_mode: low_power_periodic
     i2c_id: bus_a
@@ -35,7 +38,7 @@ sensor:
     automatic_self_calibration: False
 
   - platform: template
-    name: ${room_name} ${ext_vpd}
+    name: ${ext_vpd}
     icon: mdi:gauge
     id: gr2_ace_vpd
     lambda: |-
@@ -48,7 +51,7 @@ sensor:
 
 text_sensor:
   - platform: template
-    name: ${room_name} ${ext_co2_classification}
+    name: ${ext_co2_classification}
     id: co2_classification
     icon: "mdi:checkbox-marked-circle-outline"
     lambda: |-

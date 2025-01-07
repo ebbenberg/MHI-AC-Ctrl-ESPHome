@@ -9,8 +9,6 @@ substitutions:
   # If you encounter mhi_ac_ctrl_core.loop error: -2 errors, change the frame_size from 33 to 20
   # Remark: with frame_size 20 3D Auto and vanes left/right dont work anymore
   frame_size: "33"
-  # Unique "Room" name for external sensorname connected to the I2C grove connector or ds18b20 conn.
-  room_name: Room
 
 esphome:
   name: ac-example #name: example-ac

@@ -13,28 +13,31 @@ bme68x_bsec2_i2c:
 sensor:
   - platform: bme68x_bsec2
     temperature:
-      name: ${room_name} ${ext_temperature}
+      name: ${ext_temperature}
       id: room_temperature
       device_class: temperature
       state_class: measurement 
       filters:
         - median
+      icon: mdi:water-percent
     pressure:
-      name: ${room_name} ${ext_atm_pressure}
+      name: ${ext_atm_pressure}
       id: room_pressure
       device_class: atmospheric_pressure
       state_class: measurement 
       filters:
         - median
+      icon: mdi:thermometer-lines
     humidity:
-      name:  ${room_name} ${ext_humidity}
+      name:  ${ext_humidity}
       id: room_humidity
       device_class: humidity
       state_class: measurement 
       filters:
         - median
+      icon: mdi:water-percent
     iaq:
-      name: ${room_name} ${ext_iaq}
+      name: ${ext_iaq}
       id: iaq
       device_class: aqi
       state_class: measurement
@@ -43,7 +46,7 @@ sensor:
       on_value:
         - component.update: iaq_classification
     iaq_static:
-      name: ${room_name} ${ext_static_iaq}
+      name: ${ext_static_iaq}
       id: static_iaq
       device_class: aqi
       state_class: measurement
@@ -52,22 +55,22 @@ sensor:
       on_value:
         - component.update: static_iaq_classification
     co2_equivalent:
-      name: ${room_name} ${ext_co2_equivalent}
+      name: ${ext_co2_equivalent}
       filters:
         - median
     breath_voc_equivalent:
-      name: ${room_name} ${ext_breath_voc_equivalent}
+      name: ${ext_breath_voc_equivalent}
       filters:
         - median
     gas_resistance:
       # Gas resistance in Ω
-      name: ${room_name} ${ext_gas_resistance}
+      name: ${ext_gas_resistance}
       filters:
         - median
 
   - platform: template
     id: room_dewpoint
-    name: ${room_name} ${ext_dewpoint}
+    name: ${ext_dewpoint}
     device_class: temperature
     state_class: measurement 
     lambda: |-
@@ -80,7 +83,7 @@ sensor:
 
 text_sensor:
   - platform: template
-    name: ${room_name} ${ext_iaq_classification}
+    name: ${ext_iaq_classification}
     id: iaq_classification
     icon: "mdi:checkbox-marked-circle-outline"
     lambda: |-
@@ -117,7 +120,7 @@ text_sensor:
     update_interval: never
 
   - platform: template
-    name: ${room_name} ${ext_static_iaq_classification}
+    name: ${ext_static_iaq_classification}
     id: static_iaq_classification
     icon: "mdi:checkbox-marked-circle-outline"
     lambda: |-
@@ -155,16 +158,17 @@ text_sensor:
 
   - platform: bme68x_bsec2
     iaq_accuracy: 
-      name: ${room_name} ${ext_iaq_accuracy}
+      name: ${ext_iaq_accuracy}
 
 ## Override the room temperature from AC with external value from sensor connected to I2C grove port
 select:
   - id: update_temp_i2c
     name: ${ext_temperature_control}
+    icon: mdi:chart-bell-curve-cumulative
     platform: template
     options:
       - "${ext_mhi}"
-      - "#{ext_external"
+      - "${ext_external}"
     initial_option: "${ext_mhi}"
     optimistic: true
     restore_value: true

@@ -10,6 +10,7 @@ sensor:
     temperature:
       name: ${ext_temperature}
       id: room_temperature
+      icon: mdi:thermometer
 #    internal_temperature:
 #      name: Internal temperature
       device_class: temperature
@@ -23,6 +24,7 @@ sensor:
 select:
   - id: update_temp_i2c
     name: ${ext_temperature_control}
+    icon: mdi:chart-bell-curve-cumulative
     platform: template
     options:
       - "${ext_mhi}"

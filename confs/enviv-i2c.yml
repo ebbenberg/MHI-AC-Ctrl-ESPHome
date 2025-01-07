@@ -12,11 +12,13 @@ sensor:
       id: room_temperature
       device_class: temperature
       state_class: measurement 
+      icon: mdi:thermometer
     humidity:
       name: ${ext_humidity}
       id: room_humidity
       device_class: humidity
       state_class: measurement 
+      icon: mdi:water-percent
     i2c_id: bus_a #or choose bus_b
     address: 0x44
     update_interval: 30s
@@ -28,6 +30,7 @@ sensor:
       device_class: atmospheric_pressure
       state_class: measurement 
       oversampling: 16x
+      icon: mdi:thermometer-lines
     i2c_id: bus_a #or choose bus_b
     address: 0x76
     update_interval: 30s
@@ -44,7 +47,7 @@ sensor:
         ((17.67*id(room_temperature).state)/(243.5+id(room_temperature).state))));
     unit_of_measurement: °C
     update_interval: 30s
-    icon: 'mdi:thermometer-water'
+    icon: mdi:thermometer-water
 
 ## Override the room temperature from AC with external value from sensor connected to I2C grove port
 select:

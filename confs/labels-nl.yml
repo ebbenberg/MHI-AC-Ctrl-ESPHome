@@ -48,18 +48,18 @@ substitutions:
   vanes_control_up_down: Lamellen b/o
   operation: Meetgegevens
   control: Bediening
-  ext_temperature: temperatuur
-  ext_humidity: luchtvochtigheid
-  ext_atm_pressure: atm. druk
-  ext_iaq: lucht kwaliteit
-  ext_static_iaq: statisch lucht kwaliteit
-  ext_co2_equivalent: co2 equivalent
-  ext_breath_voc_equivalent: voc equivalent
-  ext_gas_resistance: gas weerstand
-  ext_iaq_classification: lucht kwaliteit niveau
-  ext_static_iaq_classification: statisch lucht kwaliteit niveau
-  ext_iaq_accuracy: lucht kwaliteit nauwkeurigheid
-  ext_dewpoint: dewpoint
+  ext_temperature: Temperatuur
+  ext_humidity: Luchtvochtigheid
+  ext_atm_pressure: Atm. druk
+  ext_iaq: Lucht kwaliteit
+  ext_static_iaq: Statisch lucht kwaliteit
+  ext_co2_equivalent: CO2 equivalent
+  ext_breath_voc_equivalent: VOC equivalent
+  ext_gas_resistance: Gas weerstand
+  ext_iaq_classification: Lucht kwaliteit niveau
+  ext_static_iaq_classification: Statisch lucht kwaliteit niveau
+  ext_iaq_accuracy: Lucht kwaliteit nauwkeurigheid
+  ext_dewpoint: Dauwpunt
   ext_temperature_control: Temperatuur controle
   ext_mhi: Mhi
   ext_external: Extern

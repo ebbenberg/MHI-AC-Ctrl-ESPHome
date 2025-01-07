@@ -54,12 +54,12 @@ substitutions:
   ext_iaq: IAQ
   ext_static_iaq: Static IAQ
   ext_co2_equivalent: CO2 equivalent
-  ext_breath_voc_equivalent: breath VOC equivalent
-  ext_gas_resistance: gas resistance
-  ext_iaq_classification: ext_IAQ classification
+  ext_breath_voc_equivalent: Breath VOC equivalent
+  ext_gas_resistance: Gas resistance
+  ext_iaq_classification: Ext IAQ classification
   ext_static_iaq_classification: Static IAQ classification
   ext_iaq_accuracy: IAQ accuracy
-  ext_dewpoint: dewpoint
+  ext_dewpoint: Dewpoint
   ext_temperature_control: Temperature Control
   ext_mhi: Mhi
   ext_external: External

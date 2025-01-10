@@ -217,11 +217,11 @@ public:
                 // else
                 //    output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_STOP));
                 //    break;
-                if (status != erropdata_mode && this->power_ > 0) {
-                    this->mode = climate::CLIMATE_MODE_HEAT_COOL;
-                } else {
-                    this->mode = climate::CLIMATE_MODE_OFF;
-                }
+                //if (status != erropdata_mode && this->power_ > 0) {
+                //    this->mode = climate::CLIMATE_MODE_HEAT_COOL;
+                //} else {
+                //    this->mode = climate::CLIMATE_MODE_OFF;
+                //}
                 break;
             case mode_dry:
                 // output_P(status, PSTR(TOPIC_MODE), PSTR(PAYLOAD_MODE_DRY));

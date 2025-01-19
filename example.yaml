@@ -1,4 +1,7 @@
-# Version 3.2 Wemos d1 mini
+# Version 3.1 for Wemos d1 mini
+# - added label files English and Dutch language
+# - added webserver v3 with entities sorting.
+
 substitutions:
   # Unique device ID in HA
   deviceid: "ac_example" #deviceid: "example_ac" 14 char. is maximum

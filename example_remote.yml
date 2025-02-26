@@ -56,6 +56,8 @@ external_components:
   - source: github://fonske/MHI-AC-Ctrl-ESPHome@atom
     components: [ MhiAcCtrl ]
     refresh: always
+  - source: github://robertklep/esphome-custom-component
+    components: [ custom, custom_component ]
 
 ## remote options
 packages:

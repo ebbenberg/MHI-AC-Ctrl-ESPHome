@@ -679,7 +679,7 @@ protected:
         return traits;
     }
 
-    float minimum_temperature_ { 18.0f };
+    float minimum_temperature_ { 14.0f };
     float maximum_temperature_ { 30.0f };
     float temperature_step_ { 0.5f };
 

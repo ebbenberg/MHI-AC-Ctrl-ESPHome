@@ -32,6 +32,7 @@ sensor:
 
 text_sensor:
   - platform: version
+    icon: mdi:new-box
     name: ESPHome Version
     entity_category: diagnostic
     hide_timestamp: true

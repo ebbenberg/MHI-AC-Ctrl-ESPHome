@@ -1,11 +1,19 @@
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ginkage)
 [![paypal RobertJansen1](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=TL3SFZ4P6ZDHN)
 
+# How to get started
+
+Create a new device within ESPHome builder and combine the yaml with one of the examples from the example directory, give your unit a name, configure OTA passwords and hotspot and add an api key and install!  
+
+external_sensor.yaml contains the basics to configure the room temperature using an external temperature sensor connected to Home Assistant.  
+full.yaml contains all (20+!) of the metrics that are possibly in the unit and returns them.  
+simple-energy-management.yaml contains the basics to get started with energy measuring (assuming a voltage of 230v to convert A to Wh)  
+simple.yaml basic yaml to get started, contains climate and fan direction control
+
 # MHI-AC-Ctrl-ESPHome
 This project is a simple integration of the amazing work [absalom-muc](https://github.com/absalom-muc) has done with his project [MHI-AC-Ctrl](https://github.com/absalom-muc/MHI-AC-Ctrl).\
 It's supposed to simplify the [Home Assistant](https://www.home-assistant.io/) setup, while giving you OTA and auto-discovery with virtually zero effort and no MQTT needed, powered by [ESPHome](https://esphome.io/).\
 MHI-AC-Ctrl-core.\* files were forked directly, with no modification, whereas your WiFi credentials should go into the \*.yaml file, and mhi_ac_ctrl.h is the core of the integration.\
-Create a new device within ESPHome and combine the yaml with example.yaml, rename example_ac and example-ac and install!
 
 # Fan Modes Up/Down Left/Right
 Most newer MHI units (the ones supporting the WF-RAC WiFi module) support fine grained vane control for Left/Right and Up/Down.  
@@ -23,6 +31,18 @@ CLIMATE_FAN_DIFFUSE in fan speed and status sections and reshuffle the numbers a
 
 Has now 5 different fan modes but I'm not sure if the auto mode works proper, keep testing.
 
+# low temperature heating and cooling
+
+To allow for lower temperature heating or cooling, set the visual_min_temperature in the climate section of the yaml like so:
+
+climate:  
+  - platform: MhiAcCtrl  
+    name: "MHI Air Conditioner"  
+    temperature_offset: true  
+    visual_min_temperature: 17.0  
+
+This will allow for lower temperature heating or cooling
+
 
 # Hardware
  - Hardware designed by [fonske](https://github.com/fonske) can be found [here](JLCPCB/Hardware.md)
@@ -30,9 +50,22 @@ Has now 5 different fan modes but I'm not sure if the auto mode works proper, ke
 
 # Changelog:
 
-**v3.1** (2025-01)
- - added label files English and Dutch language
- - added webserver v3 with entities sorting.
+
+
+**v4.1** (2025-07)
+ - Changed climate.CLIMATE_SCHEMA to fix deprecation warning in 2025.5.0 and higher https://github.com/ginkage/MHI-AC-Ctrl-ESPHome/issues/151
+ - Make 0.5 degrees setpoint actually work https://github.com/ginkage/MHI-AC-Ctrl-ESPHome/issues/88
+ - Allow low temp heating and cooling (below 18 degrees) https://github.com/ginkage/MHI-AC-Ctrl-ESPHome/issues/152
+ - Allow fan speed from esphome web interface https://github.com/ginkage/MHI-AC-Ctrl-ESPHome/issues/136
+ - Deprecating set set_vertical_vanes and set_horizontal_vanes, will be removed in v4.2 use select functions for fan control
+
+**v4.0** (2025-04)
+ - Compatibility with ESPHOME 2025.2+
+ - Breaking change: the implementation is ported to the native ESPHome codegen
+   - The configuration file is significantly simplified
+   - No need for custom code in the config file
+   - Sensors are no longer positional
+ - External sensor support
 
 **v3.0** (2024-08)
  - Breaking change: moved all files to component and allow for easy install, thanks to @XMaarten and https://github.com/hberntsen/mhi-ac-ctrl-esp32-c3
@@ -78,6 +111,15 @@ You probably have an older version of the Airco unit which doesn't support the n
 You can to change the frame_size in the yaml to 20 to disable newer functionality.  
 when framsize is set to 20, 3D auto, and vane Left / Right doesn't work, vane Up / Down works limited.  
 All other features should work fine.  
+
+### Everything has changed, how do i update?!?  
+As time progresses, esphome and this project evolved, allowing for more features and easier installation and updates in the future. When you are on an older versione (wether that is v3.0, v2.0 or earlier) the best way forward is to get one of the example yaml files from the examples folder and apply this to your current yaml file. 
+ 1. Make a copy of your current yaml file, and save it somewhere outside of Home Assistant.
+ 2. Did you not skip step 1?
+ 3. Choose one of the example yaml files from the example dir 
+ 4. Carefully copy the basic information from the backup file into the example file. Take things like name, ota password, wifi credentials, ap fallback settings, api settings and key, and frame_size
+ 5. Double check your new yaml and paste it in esphome builder and deploy
+ 6. If you replaced all information carefully, all should build fine. If not, read the message and see what parts are missing or duplicate (most frequently done wrong)
 
 
 # License

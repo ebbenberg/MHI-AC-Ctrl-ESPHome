@@ -239,12 +239,6 @@ sensor:
       name: "Vanes Left/Right"
 
 text_sensor:
-  - platform: version
-    name: ESPHome Version
-    hide_timestamp: true
-    disabled_by_default: false
-    icon: mdi:new-box
-    entity_category: diagnostic
   - platform: MhiAcCtrl
     protection_state:
       name: ${compressor_protection_status}

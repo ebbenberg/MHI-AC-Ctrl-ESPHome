@@ -32,10 +32,11 @@ sensor:
 
 text_sensor:
   - platform: version
-    icon: mdi:new-box
     name: ESPHome Version
-    entity_category: diagnostic
     hide_timestamp: true
+    disabled_by_default: false
+    icon: mdi:new-box
+    entity_category: diagnostic
 
   - platform: wifi_info
     ip_address:

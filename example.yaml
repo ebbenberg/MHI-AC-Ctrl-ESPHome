@@ -92,6 +92,9 @@ web_server:
 
 MhiAcCtrl:
   frame_size: ${frame_size}
+  sck_pin: 14
+  mosi_pin: 13
+  miso_pin: 12
   initial_vertical_vanes_position: 5
   initial_horizontal_vanes_position: 8
   # Update the following to change the default room temp timeout

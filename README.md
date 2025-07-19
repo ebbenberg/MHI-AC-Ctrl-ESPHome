@@ -3,11 +3,11 @@
 
 # Warning:
 The previous version of MHI-AC-CTRL-ESPHome have been moved to repository MHI-AC-CTRL-ESPHome. Due to renewal of the complete code.
-Change the external links in your yaml if you want to use this other repository.
+Change the external links in your yaml if you want to keep using this other repository.
 
-master version = wemos
+master version = wemos d1 mini
 
-Atom version = Atom
+atom version = atom s3 lite
 
 # How to get started
 

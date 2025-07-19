@@ -59,6 +59,11 @@ This will allow for lower temperature heating or cooling
 
 # Changelog:
 
+**v4.2** (2025-07)
+ - Allow configuration of pins through yaml
+ - Update calculation of Indoor Heat exchanger temperature 2 (capillary)
+ - Don't spam unit with unchanged room_temp
+ - **Deprecating set set_vertical_vanes and set_horizontal_vanes, will be removed in v4.3 use select functions for fan control**
 
 
 **v4.1** (2025-07)

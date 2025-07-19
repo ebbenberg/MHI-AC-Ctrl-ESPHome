@@ -1,28 +1,32 @@
-## version V4.2 Wemos D1 mini 
+## version V4.2 Atom S3 Lite
 substitutions:
-  name: ac-woonkamer
-  friendly_name: AC Woonkamer
+  name: ac-zolder
+  friendly_name: AC Zolder
   # Only 20 (legacy) or 33 (includes 3D auto and vertical vanes) possible.
   # If you encounter mhi_ac_ctrl_core.loop error: -2 errors, change the frame_size to 20
   frame_size: "33"
   # Pin assignment:
-  sck_pin: 14
-  mosi_pin: 13
-  miso_pin: 12
+  sck_pin: 8
+  mosi_pin: 38
+  miso_pin: 39
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
   min_version: 2024.6.0
   platformio_options:
-    # Run CPU at 160Mhz to fix mhi_ac_ctrl_core.loop error: -2
-    board_build.f_cpu: 160000000L
+    board_build.f_cpu: 240000000L
 
-esp8266:
-  board: d1_mini
+esp32:
+  board: esp32-s3-devkitc-1
+  flash_size: 8MB
+## Atom S3 lite  
+  framework:
+    type: arduino
+    version: recommended
 
 external_components:
-  - source: github://fonske/MHI-AC-Ctrl-ESPHome@master
+  - source: github://fonske/MHI-AC-Ctrl-ESPHome@atom
     components: [ MhiAcCtrl ]
     refresh: always
 
@@ -30,7 +34,7 @@ external_components:
 packages:
   remote_package:
     url: https://github.com/fonske/MHI-AC-Ctrl-ESPHome/
-    ref: master
+    ref: atom
     refresh: always
     files: [ 
             #confs/onewire.yml,
@@ -77,22 +81,22 @@ api:
             temperature: !lambda "return temperature_value;"
 
 # Optionally enables the ESP web server
-web_server:
-  port: 80
-  version: 3
-#  include_internal: true
-  ota: false
-#  local: true
-  sorting_groups:
-    - id: Control
-      name: "${control}"
-      sorting_weight: -30
-    - id: Operation
-      name: "${operation}"
-      sorting_weight: -20
-    - id: Status
-      name: "${status}"
-      sorting_weight: -10
+#web_server:
+#  port: 80
+#  version: 3
+##  include_internal: true
+#  ota: false
+##  local: true
+#  sorting_groups:
+#    - id: Control
+#      name: "${control}"
+#      sorting_weight: -30
+#    - id: Operation
+#      name: "${operation}"
+#      sorting_weight: -20
+#    - id: Status
+#      name: "${status}"
+#      sorting_weight: -10
 
 MhiAcCtrl:
   frame_size: ${frame_size}
@@ -119,9 +123,9 @@ climate:
       temperature_step:
         target_temperature: 0.5
         current_temperature: 0.1
-    web_server:
-      sorting_group_id: Control
-      sorting_weight: 1
+#    web_server:
+#      sorting_group_id: Control
+#      sorting_weight: 1
 
 time:
   - platform: homeassistant
@@ -132,107 +136,107 @@ binary_sensor:
     defrost:
       name: ${defrost}
       icon: mdi:snowflake-melt
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 13
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 13
     vanes_3d_auto_enabled:
       name: ${d_auto}
       icon: mdi:video-3d
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 12
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 12
 
 
 sensor:
   - platform: MhiAcCtrl
     outdoor_temperature:
       name: ${outdoor_temperature}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 5
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 5
     return_air_temperature:
       name: ${return_air_temperature}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 1
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 1
     outdoor_unit_fan_speed:
       name: ${outdoor_unit_fan_speed}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 2      
+#      web_server:
+#        sorting_group_id: Status
+#        sorting_weight: 2      
     indoor_unit_fan_speed:
       name: ${indoor_unit_fan_speed}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 1
+#      web_server:
+#        sorting_group_id: Status
+#        sorting_weight: 1
     compressor_frequency:
       name: ${compressor_frequency}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 8
+ #     web_server:
+ #       sorting_group_id: Operation
+ #       sorting_weight: 8
     indoor_unit_total_run_time:
       name: ${indoor_unit_total_run_time}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 3
+ #     web_server:
+ #       sorting_group_id: Status
+ #       sorting_weight: 3
     compressor_total_run_time:
       name: ${outdoor_unit_total_run_time}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 4
+ #     web_server:
+ #       sorting_group_id: Status
+ #       sorting_weight: 4
     current_power:
       name: ${compressor_power}
     energy_used:
       name: ${energy_used}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 12
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 12
     indoor_unit_thi_r1:
       name: ${indoor_unit_u_bend_he_temp_1}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 2
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 2
     indoor_unit_thi_r2:
       name: ${indoor_unit_capillary_he_temp_2}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 3
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 3
     indoor_unit_thi_r3:
       name: ${indoor_unit_suction_header_he_temp_3}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 4
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 4
     outdoor_unit_tho_r1:
       name: ${outdoor_unit_he_temp}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 6
+#      web_server:
+#        sorting_group_id: Operation
+#        sorting_weight: 6
     outdoor_unit_expansion_valve:
       name: ${outdoor_unit_exp_valve}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 5
+ #     web_server:
+ #       sorting_group_id: Status
+ #       sorting_weight: 5
     outdoor_unit_discharge_pipe:
       name: "${outdoor_unit_discharge_pipe}"
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 7
+ #     web_server:
+ #       sorting_group_id: Operation
+ #       sorting_weight: 7
     outdoor_unit_discharge_pipe_super_heat:
       name: ${outdoor_unit_discharge_pipe_super_heat}
-      web_server:
-        sorting_group_id: Operation
-        sorting_weight: 8
+  #    web_server:
+  #      sorting_group_id: Operation
+  #      sorting_weight: 8
     protection_state_number:
       name: ${compressor_protection_code}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 6
+  #    web_server:
+  #      sorting_group_id: Status
+  #      sorting_weight: 6
     error_code:
       name: "Error code"
       icon: mdi:shield-alert-outline
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 7
+   #   web_server:
+   #     sorting_group_id: Status
+   #     sorting_weight: 7
     vanes_pos:
       name: "Vanes"
     vanesLR_pos:
@@ -242,36 +246,36 @@ text_sensor:
   - platform: MhiAcCtrl
     protection_state:
       name: ${compressor_protection_status}
-      web_server:
-        sorting_group_id: Status
-        sorting_weight: 7
+#      web_server:
+#        sorting_group_id: Status
+#        sorting_weight: 7
 
 select:
   - platform: MhiAcCtrl
     vertical_vanes:
       name: ${vanes_up_down}
       icon: mdi:arrow-up-down
-      web_server:
-        sorting_group_id: Control
-        sorting_weight: 3
+#      web_server:
+#        sorting_group_id: Control
+#        sorting_weight: 3
     horizontal_vanes:
       name: ${vanes_left_right}
       icon: mdi:arrow-left-right
-      web_server:
-        sorting_group_id: Control
-        sorting_weight: 2
+#      web_server:
+#        sorting_group_id: Control
+#        sorting_weight: 2
     fan_speed:
       name: ${fan_speed}
       icon: mdi:fan
-      web_server:
-        sorting_group_id: Control
-        sorting_weight: 4
+#      web_server:
+#        sorting_group_id: Control
+#        sorting_weight: 4
 
 switch:
   - platform: MhiAcCtrl
     vanes_3d_auto:
       name: ${d_auto}
       icon: mdi:video-3d
-      web_server:
-        sorting_group_id: Control
-        sorting_weight: 5
+#      web_server:
+#        sorting_group_id: Control
+#        sorting_weight: 5

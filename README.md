@@ -1,6 +1,11 @@
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ginkage)
 [![paypal RobertJansen1](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=TL3SFZ4P6ZDHN)
 
+# Warning:
+The previous version of MHI-AC-CTRL-ESPHome have been moved to repository MHI-AC-CTRL-ESPHome. Due to renewal of the complete code.
+Main version = wemos
+Atom version = Atom
+
 # How to get started
 
 Create a new device within ESPHome builder and combine the yaml with one of the examples from the example directory, give your unit a name, configure OTA passwords and hotspot and add an api key and install!  
